@@ -24,6 +24,7 @@
     "@nestjs/common": "^9.0.0",
     "@nestjs/core": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
+    "@vercel/node": "^2.8.0",
     "class-validator": "^0.13.2",
     "lodash": "^4.17.21",
     "reflect-metadata": "^0.1.13",
