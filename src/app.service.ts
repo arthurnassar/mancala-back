@@ -164,49 +164,6 @@ export class AppService {
       player: 997,
     },
   ];
-  private readonly users: User[] = [{
-    id: 123,
-    email: 'arthurnassar@gmail.com',
-    password: '1'
-  }];
-
-  createUser(user: User): User[] {
-    const userExists = this.users.find((item) => {
-      return item.email === user.email;
-    });
-
-    if (userExists) {
-      throw new HttpException('Email ja existe', HttpStatus.CONFLICT);
-    }
-
-    user.id = Math.floor(Math.random() * 100000000000000000);
-    this.users.push(user);
-
-    return this.users;
-  }
-
-  authenticate(user: User): User {
-    const userExists = this.users.find((item) => {
-      return item.email === user.email;
-    });
-
-    const passwordExists = this.users.find((item) => {
-      return item.password === user.password;
-    });
-    if (userExists && passwordExists) {
-      const result = this.users.find((item) => {
-        return item.email === user.email && item.password === user.password;
-      });
-
-      return result;
-    }
-
-    throw new HttpException('Email ou senha invalido', HttpStatus.FORBIDDEN);
-  }
-
-  findAllUsers(): User[] {
-    return this.users;
-  }
 
   createGame(pits: number, pieces: number, userId: number): Game {
     // CREATE GAME BASE FORMAT

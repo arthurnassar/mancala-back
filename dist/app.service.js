@@ -168,36 +168,6 @@ let AppService = class AppService {
                 player: 997,
             },
         ];
-        this.users = [];
-    }
-    createUser(user) {
-        const userExists = this.users.find((item) => {
-            return item.email === user.email;
-        });
-        if (userExists) {
-            throw new common_1.HttpException('Email ja existe', common_1.HttpStatus.CONFLICT);
-        }
-        user.id = Math.floor(Math.random() * 100000000000000000);
-        this.users.push(user);
-        return this.users;
-    }
-    authenticate(user) {
-        const userExists = this.users.find((item) => {
-            return item.email === user.email;
-        });
-        const passwordExists = this.users.find((item) => {
-            return item.password === user.password;
-        });
-        if (userExists && passwordExists) {
-            const result = this.users.find((item) => {
-                return item.email === user.email && item.password === user.password;
-            });
-            return result;
-        }
-        throw new common_1.HttpException('Email ou senha invalido', common_1.HttpStatus.FORBIDDEN);
-    }
-    findAllUsers() {
-        return this.users;
     }
     createGame(pits, pieces, userId) {
         const game = {

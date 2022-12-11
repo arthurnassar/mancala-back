@@ -1,28 +1,11 @@
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { AppService } from './app.service';
 import { CreateGameDto } from './dto/create-game.dto';
-import { CreateUserDto } from './dto/create-user.dto';
 import { Game } from './interfaces/game.interface';
-import { User } from './interfaces/user.interface';
 
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
-
-  @Post('login')
-  authenticate(@Body() user: User): User {
-    return this.appService.authenticate(user);
-  }
-
-  @Post('user')
-  createUser(@Body() createUserDto: CreateUserDto): User[] {
-    return this.appService.createUser(createUserDto);
-  }
-
-  @Get('users')
-  findAllUsers(): User[] {
-    return this.appService.findAllUsers();
-  }
 
   // CREATE GAME
   @Post('game')

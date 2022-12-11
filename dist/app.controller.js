@@ -15,19 +15,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppController = void 0;
 const common_1 = require("@nestjs/common");
 const app_service_1 = require("./app.service");
-const create_user_dto_1 = require("./dto/create-user.dto");
 let AppController = class AppController {
     constructor(appService) {
         this.appService = appService;
-    }
-    authenticate(user) {
-        return this.appService.authenticate(user);
-    }
-    createUser(createUserDto) {
-        return this.appService.createUser(createUserDto);
-    }
-    findAllUsers() {
-        return this.appService.findAllUsers();
     }
     createGame({ pits, pieces, userId }) {
         return this.appService.createGame(pits, pieces, userId);
@@ -42,26 +32,6 @@ let AppController = class AppController {
         return this.appService.movePiece(gameId, pit);
     }
 };
-__decorate([
-    (0, common_1.Post)('login'),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", Object)
-], AppController.prototype, "authenticate", null);
-__decorate([
-    (0, common_1.Post)('user'),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_user_dto_1.CreateUserDto]),
-    __metadata("design:returntype", Array)
-], AppController.prototype, "createUser", null);
-__decorate([
-    (0, common_1.Get)('users'),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", Array)
-], AppController.prototype, "findAllUsers", null);
 __decorate([
     (0, common_1.Post)('game'),
     __param(0, (0, common_1.Body)()),
