@@ -164,7 +164,11 @@ export class AppService {
       player: 997,
     },
   ];
-  private readonly users: User[] = [];
+  private readonly users: User[] = [{
+    id: 123,
+    email: 'arthurnassar@gmail.com',
+    password: '1'
+  }];
 
   createUser(user: User): User[] {
     const userExists = this.users.find((item) => {
