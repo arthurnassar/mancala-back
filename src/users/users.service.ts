@@ -5,44 +5,43 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './interface/user.interface';
 import { User as UserSchema, UserDocument } from './schema/user.schema';
+import { UsersRepository } from './users.repository';
 
 @Injectable()
 export class UsersService {
-
-  constructor(@InjectModel(UserSchema.name) private userModel: Model<UserDocument>) {}
+  usersRepository: UsersRepository
+  constructor(usersRepository: UsersRepository) {
+    this.usersRepository = usersRepository
+  }
+  
   private readonly users: User[] = [];
 
   // TODO CREATE AUTHENTICATION SERVICE WITH PASSPORT AND JWT TOKEN
-  authenticate(user: User): User {
-    const userExists = this.users.find((item) => {
-      return item.email === user.email;
-    });
-
-    const passwordExists = this.users.find((item) => {
-      return item.password === user.password;
-    });
-    if (userExists && passwordExists) {
-      const result = this.users.find((item) => {
-        return item.email === user.email && item.password === user.password;
-      });
-
-      return result;
+  async authenticate(user: User): Promise<User | HttpException> {
+    const dbUser = await this.usersRepository.findOne(user);
+    console.log(dbUser)
+    const userExists = !!dbUser
+    const emailMatches = dbUser.email === user.email
+    const passwordMatches = dbUser.password === user.password
+    if (!userExists || !emailMatches || !passwordMatches) {
+      throw new HttpException('Email ou senha invalido', HttpStatus.FORBIDDEN);
     }
 
-    throw new HttpException('Email ou senha invalido', HttpStatus.FORBIDDEN);
+
+    return dbUser;
+
   }
 
-  async findAllUsers(): Promise<UserSchema[]> {
-    return await this.userModel.find({});
+  async findAllUsers(): Promise<User[]> {
+    return await this.usersRepository.findAll()
   }
 
-  async createUser(createUserDto: CreateUserDto): Promise<UserSchema | HttpException> {
-    const dbUser = await this.userModel.find({ email: createUserDto.email}).exec()
-    const createdUser = new this.userModel(createUserDto);
-    const emailExists = dbUser.length !== 0
-    if(emailExists) throw new HttpException('Este email está em uso', HttpStatus.CONFLICT)
+  async createUser(createUserDto: CreateUserDto): Promise<User | HttpException> {
+    const dbUser = await this.usersRepository.findByEmail(createUserDto.email)
+    if(dbUser) throw new HttpException('Este email está em uso', HttpStatus.CONFLICT)
     
-    return createdUser.save()
+    const createdUser = await this.usersRepository.create(createUserDto);
+    return createdUser
   }
   
 }

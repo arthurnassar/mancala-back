@@ -4,6 +4,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User as UserSchema } from './schema/user.schema';
 import { User } from './interface/user.interface';
+import { create } from 'lodash';
 
 @Controller()
 export class UsersController {
@@ -11,7 +12,7 @@ export class UsersController {
 
   // TODO CREATE AUTHENTICATION SERVICE WITH PASSPORT AND JWT TOKEN
   @Post('login')
-  authenticate(@Body() user: User): User {
+  authenticate(@Body() user: User): Promise<User | HttpException | void> {
     return this.usersService.authenticate(user);
   }
 

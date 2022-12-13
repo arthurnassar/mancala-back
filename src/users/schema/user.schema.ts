@@ -12,7 +12,7 @@ export class User {
   @Prop({ required: true })
   email: string;
 
-  @Prop()
+  @Prop({ required: true })
   password: string;
 
   // ADD A REFERENCE TO THE GAME SCHEMA AFTER (ONE USER CAN HAVE MULTIPLE GAMES)
