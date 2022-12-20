@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/users/interface/user.interface';
 import { UsersRepository } from 'src/users/users.repository';
@@ -12,16 +12,20 @@ export class AuthService {
 
   async validateUser(user: User): Promise<any> {
     const dbUser = await this.usersRepository.findOne(user);
-    if (user && dbUser.password === user.password) {
+    if (dbUser && dbUser.password === user.password) {
       const { password, ...result } = dbUser;
       return result;
     }
-
-    return null;
+    
+    throw new HttpException('Email ou senha invalido', HttpStatus.FORBIDDEN);    
   }
 
-  async login(user: any) {
-    const payload = { username: user.username, sub: user.userId };
+  async login(user: User) {
+    const {_doc} = await this.validateUser(user)
+    const dbUser = _doc
+    console.log()
+    
+    const payload = { email: dbUser.email, sub: dbUser._id };
     return {
       access_token: this.jwtService.sign(payload),
     };
