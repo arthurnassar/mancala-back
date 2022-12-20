@@ -5,7 +5,6 @@ import { User } from './interface/user.interface';
 export declare class UsersController {
     private readonly usersService;
     constructor(usersService: UsersService);
-    authenticate(user: User): User;
     createUser(createUserDto: CreateUserDto): Promise<User | HttpException>;
     findAllUsers(): Promise<User[]>;
 }

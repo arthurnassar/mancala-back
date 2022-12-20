@@ -16,12 +16,10 @@ exports.UsersController = void 0;
 const common_1 = require("@nestjs/common");
 const users_service_1 = require("./users.service");
 const create_user_dto_1 = require("./dto/create-user.dto");
+const jwt_auth_guard_1 = require("../auth/jwt-auth.guard");
 let UsersController = class UsersController {
     constructor(usersService) {
         this.usersService = usersService;
-    }
-    authenticate(user) {
-        return this.usersService.authenticate(user);
     }
     createUser(createUserDto) {
         return this.usersService.createUser(createUserDto);
@@ -31,13 +29,6 @@ let UsersController = class UsersController {
     }
 };
 __decorate([
-    (0, common_1.Post)('login'),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", Object)
-], UsersController.prototype, "authenticate", null);
-__decorate([
     (0, common_1.Post)('user'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -45,6 +36,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "createUser", null);
 __decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Get)('users'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),

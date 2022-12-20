@@ -8,51 +8,40 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersService = void 0;
 const common_1 = require("@nestjs/common");
-const mongoose_1 = require("@nestjs/mongoose");
-const mongoose_2 = require("mongoose");
-const user_schema_1 = require("./schema/user.schema");
+const users_repository_1 = require("./users.repository");
 let UsersService = class UsersService {
-    constructor(userModel) {
-        this.userModel = userModel;
+    constructor(usersRepository) {
         this.users = [];
+        this.usersRepository = usersRepository;
     }
-    authenticate(user) {
-        const userExists = this.users.find((item) => {
-            return item.email === user.email;
-        });
-        const passwordExists = this.users.find((item) => {
-            return item.password === user.password;
-        });
-        if (userExists && passwordExists) {
-            const result = this.users.find((item) => {
-                return item.email === user.email && item.password === user.password;
-            });
-            return result;
+    async authenticate(user) {
+        const dbUser = await this.usersRepository.findOne(user);
+        console.log(dbUser);
+        const userExists = !!dbUser;
+        const emailMatches = dbUser.email === user.email;
+        const passwordMatches = dbUser.password === user.password;
+        if (!userExists || !emailMatches || !passwordMatches) {
+            throw new common_1.HttpException('Email ou senha invalido', common_1.HttpStatus.FORBIDDEN);
         }
-        throw new common_1.HttpException('Email ou senha invalido', common_1.HttpStatus.FORBIDDEN);
+        return dbUser;
     }
     async findAllUsers() {
-        return await this.userModel.find({});
+        return await this.usersRepository.findAll();
     }
     async createUser(createUserDto) {
-        const dbUser = await this.userModel.find({ email: createUserDto.email }).exec();
-        const createdUser = new this.userModel(createUserDto);
-        const emailExists = dbUser.length !== 0;
-        if (emailExists)
+        const dbUser = await this.usersRepository.findByEmail(createUserDto.email);
+        if (dbUser)
             throw new common_1.HttpException('Este email está em uso', common_1.HttpStatus.CONFLICT);
-        return createdUser.save();
+        const createdUser = await this.usersRepository.create(createUserDto);
+        return createdUser;
     }
 };
 UsersService = __decorate([
     (0, common_1.Injectable)(),
-    __param(0, (0, mongoose_1.InjectModel)(user_schema_1.User.name)),
-    __metadata("design:paramtypes", [mongoose_2.Model])
+    __metadata("design:paramtypes", [users_repository_1.UsersRepository])
 ], UsersService);
 exports.UsersService = UsersService;
 //# sourceMappingURL=users.service.js.map

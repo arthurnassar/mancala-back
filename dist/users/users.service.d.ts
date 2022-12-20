@@ -1,13 +1,12 @@
 import { HttpException } from '@nestjs/common';
-import { Model } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './interface/user.interface';
-import { User as UserSchema, UserDocument } from './schema/user.schema';
+import { UsersRepository } from './users.repository';
 export declare class UsersService {
-    private userModel;
-    constructor(userModel: Model<UserDocument>);
+    usersRepository: UsersRepository;
+    constructor(usersRepository: UsersRepository);
     private readonly users;
-    authenticate(user: User): User;
-    findAllUsers(): Promise<UserSchema[]>;
-    createUser(createUserDto: CreateUserDto): Promise<UserSchema | HttpException>;
+    authenticate(user: User): Promise<User | HttpException>;
+    findAllUsers(): Promise<User[]>;
+    createUser(createUserDto: CreateUserDto): Promise<User | HttpException>;
 }
