@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
+import { User } from 'src/users/schema/user.schema';
 import { Piece } from './piece.schema';
 import { Pit } from './pit.schema';
 
@@ -7,32 +8,27 @@ export type GameDocument = HydratedDocument<Game>;
 
 @Schema()
 export class Game {
-  @Prop()
-  id: number;
 
   @Prop({ type: Number,  enum: [ 1, 2 ] })
-  turn: number;
+  turn: 1 | 2;
   
   @Prop({ type: Number,  enum: [ 1, 2 ] })
-  gameEnded: number;
+  gameEnded: 1 | 2;
   
   @Prop()
   pitCount: number;
   
   @Prop([Pit])
-  pits: [Pit];
+  pits: Pit[];
   
   @Prop([Piece])
-  p1Pit: [Piece];
+  p1Pit: Piece[];
   
   @Prop([Piece])
-  p2Pit: [Piece];
+  p2Pit: Piece[];
   
-  @Prop([Piece])
-  pieces: [Piece];
-  
-  @Prop()
-  player: number;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
+  player: User;
 
 }
 export const GameSchema = SchemaFactory.createForClass(Game);

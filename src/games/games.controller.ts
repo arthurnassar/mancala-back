@@ -15,7 +15,7 @@ export class GamesController {
   @Post('game')
   createGame(
     @Body()
-    { pits, pieces, userId }: { pits: number; pieces: number; userId: number },
+    { pits, pieces, userId }: { pits: number; pieces: number; userId: string },
   ): Promise<GameSchema> {
     return this.gamesService.createGame(pits, pieces, userId);
   }
@@ -23,24 +23,24 @@ export class GamesController {
   // GET GAME BY ID
   @UseGuards(JwtAuthGuard)
   @Get('game/:gameId')
-  getGameById(@Param('gameId') gameId: number): Game {
-    return this.gamesService.findGameById(gameId);
+  async getGameById(@Param('gameId') gameId: string): Promise<GameSchema> {
+    return await this.gamesService.findGameById(gameId);
   }
 
   // GET GAME THAT BELONGS TO THE USER ID
   @UseGuards(JwtAuthGuard)
   @Get('games/:userId')
-  getAllGames(@Param('userId') userId: string): Game[] | void {
-    return this.gamesService.findAllGames(userId);
+  async getAllGames(@Param('userId') userId: string): Promise<GameSchema[]> {
+    return await this.gamesService.findAllGames(userId);
   }
 
-  // MAKE MOVE SELECTING THE PIT
+  // // MAKE MOVE SELECTING THE PIT
   @UseGuards(JwtAuthGuard)
   @Post('move')
   moveGamePiece(
     @Body()
-    { gameId, player, pit }: { gameId: number; player: 1 | 2; pit: number },
-  ): Game[] | string {
+    { gameId, pit }: { gameId: string; pit: number },
+  ): Promise<GameSchema[] | string> {
     return this.gamesService.movePiece(gameId, pit);
   }
 }
