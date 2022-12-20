@@ -6,8 +6,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
-    allowedHeaders: ['Content-Type'],
-    origin: 'https://mancala-front.vercel.app/',
+    allowedHeaders: '*',
+    origin: '*',
   });
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
 

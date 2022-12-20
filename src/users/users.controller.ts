@@ -5,7 +5,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User as UserSchema } from './schema/user.schema';
 import { User } from './interface/user.interface';
 import { create } from 'lodash';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller()
 export class UsersController {
